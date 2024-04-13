@@ -1,0 +1,159 @@
+body{
+  margin:0;
+  padding:0;
+  background-image: url(images.jpg);
+  background-size:cover;
+  background-repeat: no-repeat;
+}
+/*-----------header----------------*/
+header{
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  height: 14vh;
+  font-size: 52px;
+  backdrop-filter: blur(100px);
+  color: #eee;
+  letter-spacing: 1px;
+}
+/*------------main-----------------*/
+#main{
+  height:58vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#main {
+  width: 100%;
+  position:relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+#login {
+  width: 352px;
+  background-color: rgba(255,255,255,0.25);
+  backdrop-filter: blur(5px);
+  height:80%;
+  border-radius: 30px;
+  box-shadow: -5px -5px 10px #444, 5px 5px 10px #444;
+  position: absolute;
+  min-height: 350px;
+  overflow: hidden;
+  transition:0.5s;
+}
+
+#login > #idpw{
+  height:60%;
+  text-align: center;
+  position:absolute;
+  top:15%;
+  left:10%;
+}
+#login > #idpw > div{
+  margin-top:10%;
+}
+#login > #idpw > div > input {
+  background: #eee;
+  padding: 16px;
+  margin: 8px 0;
+  width: 123%;
+  border: 0;
+  outline: none;
+  border-radius: 20px;
+  box-shadow: inset 7px 2px 10px #babebc, inset -5px -5px 12px #eee;
+}
+
+button {
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+  font-size: 18px;
+  font-weight: 700;
+  color: #555;
+  cursor: pointer;
+  transition: transform 80ms ease-in;
+  box-shadow: -2px -2px 3px #555, 2px 2px 3px #555;
+  width: 100px;
+  height:42px;
+  text-wrap: nowrap;
+}
+
+
+#btn_login{
+  position:absolute;
+  bottom:15%;
+  left:15%;
+}
+
+button:hover{
+  color:#000;
+}
+
+#btn_join{
+  position:absolute;
+  bottom:15%;
+  left:55%;
+}
+
+btn_login:active {
+  box-shadow: inset 1px 1px 2px #babebc, inset -1px -1px 2px #eee;
+}
+
+/*---------------bottom--------------*/
+#bottom{
+  display: flex;
+  height:20vh;
+  justify-content: center;
+  align-items: center;
+}
+
+#select{
+  display:flex;
+  width: 96vw;
+  height:7vw;
+  border-radius: 2vw;
+  backdrop-filter: blur(100px);
+  box-shadow: -1px -1px 1px #000, 2px 2px 2px #000;
+  min-height: 50px;
+}
+
+#select > div{
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  width:50%;
+  height:7vw;
+  font-size: 3vw;
+  color:#eee;
+  min-height: 50px;
+}
+
+#search{
+  border-right: 2px solid #000;
+}
+
+#search:hover{
+  cursor: pointer;
+}
+
+#planner:hover{
+  cursor: pointer;
+}
+/*----------------footer------------------*/
+footer{
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  height:7.9vh;
+  background-color: #FAE100;
+  box-shadow: 1px 1px 15px #FAE100;
+  font-size: 18px;
+  font-weight: 700;
+}
