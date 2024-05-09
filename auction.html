@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="auctionstyle.css" />
+    <script>
+      // 최대 값과 두 번째로 큰 값을 저장할 변수 선언
+      var maxValue = 0;
+      var secondMaxValue = 0;
+
+      function updateTime() {
+        var now = new Date();
+        var hours = now.getHours();
+        var minutes = now.getMinutes();
+        var seconds = now.getSeconds();
+
+        // 시, 분, 초가 한 자리 수일 경우 앞에 0 추가
+        hours = hours < 10 ? "0" + hours : hours;
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        var timeString = hours + ":" + minutes + ":" + seconds;
+
+        document.getElementById("real-time").textContent = timeString;
+      }
+
+      // 1초마다 updateTime 함수를 호출하여 실제 시간을 업데이트
+      setInterval(updateTime, 1000);
+
+      // 페이지 로드 시 한 번 호출하여 초기 시간 설정
+      updateTime();
+
+      // 버튼 클릭 시 값을 저장하고 출력하는 함수
+      function saveValue() {
+        var enteredValue = parseInt(document.getElementById("bidInput").value);
+        // 입력된 값이 현재 최대 값보다 큰 경우
+        if (enteredValue > maxValue) {
+          secondMaxValue = maxValue; // 기존 최대 값을 두 번째로 큰 값으로 저장
+          maxValue = enteredValue; // 새로운 최대 값으로 업데이트
+        } else if (enteredValue > secondMaxValue) {
+          // 입력된 값이 최대 값보다 작고 두 번째로 큰 값보다 큰 경우
+          secondMaxValue = enteredValue; // 두 번째로 큰 값으로 업데이트
+        }
+        document.getElementById("maxValue").textContent = maxValue + "원";
+        document.getElementById("secondMaxValue").textContent =
+          secondMaxValue + "원";
+      }
+    </script>
+  </head>
+  <body>
+    <header>
+      <div style="color: white">경매장</div>
+    </header>
+    <div id="maintext" style="color: white"><span id="real-time"></span></div>
+    <main>
+      <div id="auctionbox">
+        <div id="bidtext">
+          <p>저장된 최대 값: <span id="maxValue">0원</span></p>
+          <p>저장된 두 번째로 큰 값: <span id="secondMaxValue">0원</span></p>
+        </div>
+        <input type="number" id="bidInput" placeholder="값을 입력하세요" />
+        <button id="bidbutton" onclick="saveValue()">저장하기</button>
+      </div>
+    </main>
+
+    <footer>Kakao 에드핏</footer>
+  </body>
+</html>
