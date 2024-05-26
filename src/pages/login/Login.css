@@ -1,0 +1,21 @@
+@keyframes gradientAnimation {
+  0% {
+    background-color: #667eea;
+  }
+  25% {
+    background-color: #764ba2;
+  }
+  50% {
+    background-color: #6bcbef;
+  }
+  75% {
+    background-color: #ff6e7f;
+  }
+  100% {
+    background-color: #667eea;
+  }
+}
+
+.bg-animated {
+  animation: gradientAnimation 15s ease infinite;
+}
