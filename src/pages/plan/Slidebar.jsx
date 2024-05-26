@@ -83,7 +83,7 @@ function Slidebar({ selectedDates, onDrop }) {
                 <div className="relative flex items-center justify-center w-8 h-8 rounded-full bg-blue-500 text-white font-bold">
                   {itemIndex + 1}
                 </div>
-                <div className="relative border-2 border-gray-200 rounded-lg p-2 w-56 h-20 text-sm font-semibold bg-white shadow-sm">
+                <div className="relative border-2 border-gray-200 rounded-lg p-2 w-56 h-24 text-sm font-semibold bg-white shadow-sm">
                   <div className="text-gray-800 w-4/4 flex justify-between">
                     {item.name}
                     <button
