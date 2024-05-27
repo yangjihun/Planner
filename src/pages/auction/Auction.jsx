@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 const Auction = () => {
   const [maxValue, setMaxValue] = useState(0);
   const [secondMaxValue, setSecondMaxValue] = useState(0);
-  const [currentTime, setCurrentTime] = useState('');
-  const [inputValue, setInputValue] = useState('');
+  const [currentTime, setCurrentTime] = useState("");
+  const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
     const updateTime = () => {
@@ -13,9 +13,9 @@ const Auction = () => {
       let minutes = now.getMinutes();
       let seconds = now.getSeconds();
 
-      hours = hours < 10 ? '0' + hours : hours;
-      minutes = minutes < 10 ? '0' + minutes : minutes;
-      seconds = seconds < 10 ? '0' + seconds : seconds;
+      hours = hours < 10 ? "0" + hours : hours;
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      seconds = seconds < 10 ? "0" + seconds : seconds;
 
       const timeString = `${hours}:${minutes}:${seconds}`;
       setCurrentTime(timeString);
@@ -37,6 +37,12 @@ const Auction = () => {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      saveValue();
+    }
+  };
+
   return (
     <div className="relative min-h-screen flex flex-col bg-scary-gradient bg-[length:200%_200%] animate-bg-move text-white overflow-hidden">
       <header className="p-4">
@@ -44,15 +50,22 @@ const Auction = () => {
       </header>
       <main className="flex-grow flex flex-col items-center justify-center relative">
         <div className="text-center mb-4">
-          <span className="text-2xl font-mono">{currentTime}</span>
+          <div
+            id="currentTime"
+            className="text-7xl font-digital-7 text-bold p-3 rounded-md"
+            style={{ fontFamily: "DS-DIGITAL" }}
+          >
+            {currentTime}
+          </div>
         </div>
         <div className="bg-gray-800 p-6 rounded-lg shadow-xl w-80">
-          <div className="mt-4">
+          <div className="mt-0">
             <p className="mb-2">
               저장된 최대 값: <span id="maxValue">{maxValue}원</span>
             </p>
             <p className="mb-4">
-              저장된 두 번째로 큰 값: <span id="secondMaxValue">{secondMaxValue}원</span>
+              저장된 두 번째로 큰 값:{" "}
+              <span id="secondMaxValue">{secondMaxValue}원</span>
             </p>
           </div>
           <input
@@ -62,6 +75,7 @@ const Auction = () => {
             className="w-full p-2 mb-4 rounded-lg bg-gray-700 text-white"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
           <button
             id="bidbutton"
