@@ -178,7 +178,7 @@ function Plan() {
         keyword = 'cafe';
         break;
       default:
-        keyword = 'restaurant';
+        keyword = 'korean';
     }
     setIsTourist(false); // tourist 카테고리가 아님을 설정
     if (mapRef.current) {
