@@ -3,7 +3,7 @@ import placeData from "./서울식당.json";
 
 function SelectPlace({ placesData, pick, onDragStart, onFilterChange }) {
   const [filteredData, setFilteredData] = useState([]);
-  const [activeCategory, setActiveCategory] = useState('tourist'); // 초기 카테고리 설정
+  const [activeCategory, setActiveCategory] = useState('한식'); // 초기 카테고리 설정
 
   useEffect(() => {
     const filterResults = () => {
