@@ -3,14 +3,16 @@ import { useLocation } from "react-router-dom";
 import { GoogleMap, LoadScript, Marker, InfoWindow } from "@react-google-maps/api";
 import Sidebar from "./Sidebar";
 import "./Plan.css";
-import kind from "./서울식당.json"; // 서울식당.json 파일을 가져옴
-
+import kind_china from "./서울_중식.json"; // 서울식당.json 파일을 가져옴
+import kind_korea from "./서울_한식.json";
+import kind_usa from "./서울_양식.json";
+import kind_cafe from "./서울_카페.json";
 const containerStyle = {
   width: "100%",
-  height: "93vh",
+  height: "100vh",
 };
 
-function Plan() {
+function Plan({name}) {
   const location = useLocation();
   const [center, setCenter] = useState(null);
   const [places, setPlaces] = useState([]);
@@ -18,9 +20,10 @@ function Plan() {
   const [placesData, setPlacesData] = useState([]);
   const [filteredPlacesData, setFilteredPlacesData] = useState([]);
   const [currentAddress, setCurrentAddress] = useState(''); // 현재 주소 상태 추가
-  const [isTourist, setIsTourist] = useState(false); // tourist 카테고리 여부 상태 추가
   const mapRef = useRef(null);
   const geocoder = useRef(null);
+  const [isClick, setIsClick] = useState("korean");
+  const [isKind, setIsKind] = useState(false);
 
   useEffect(() => {
     if (location.state && location.state.center && location.state.center.coords) {
@@ -37,10 +40,14 @@ function Plan() {
     }
   }, [location]);
 
+  useEffect(() => {
+    handleFilterChange();
+  }, [isClick, isKind]);
+
   const onLoad = (map) => {
     mapRef.current = map;
     geocoder.current = new window.google.maps.Geocoder();
-    searchNearbyPlaces(map.getCenter(), '한식'); // 기본 검색어를 '한식'으로 설정
+    searchNearbyPlaces(map.getCenter(), 'korean'); // 기본 검색어를 '한식'으로 설정
 
     if (center) {
       geocodeLatLng(center);
@@ -87,15 +94,15 @@ function Plan() {
           lng: newCenterLng,
         };
         setCenter(newCenterCoords);
-        if (isTourist) {
+        if (isKind) {
           loadKindPlacesData(geocoder.current); // tourist 카테고리일 때 JSON 파일을 로드하여 지도에 표시
         } else {
-          searchNearbyPlaces(newCenter, '한식'); // 기본 검색어를 '한식'으로 설정
+          searchNearbyPlaces(newCenter, isClick); // 기본 검색어를 '한식'으로 설정 / 여기 수정해야됨
         }
         geocodeLatLng(newCenterCoords);
       }
     }
-  }, [center, isTourist]);
+  }, [center, isKind]);
 
   const geocodeLatLng = (coords) => {
     geocoder.current.geocode({ location: coords }, (results, status) => {
@@ -138,40 +145,91 @@ function Plan() {
   };
 
   const loadKindPlacesData = async (geocoder) => {
-    const geocodedPlaces = await Promise.all(
-      kind.map(async (place) => {
-        const coords = await getLatLng(place.address, geocoder);
-        if (coords) {
-          return {
-            ...place,
-            location: coords,
-          };
-        } else {
-          console.warn(`Geocoding failed for address: ${place.address}`);
-          return null;
-        }
-      })
-    );
+    let geocodedPlaces;
+    if(isClick==="korean"){
+      geocodedPlaces = await Promise.all(
+        kind_korea.map(async (place) => {
+          const coords = await getLatLng(place.address, geocoder);
+          if (coords) {
+            return {
+              ...place,
+              location: coords,
+            };
+          } else {
+            console.warn(`Geocoding failed for address: ${place.address}`);
+            return null;
+          }
+        })
+      );
+    }
+    else if(isClick==="chinese"){
+      geocodedPlaces = await Promise.all(
+        kind_china.map(async (place) => {
+          const coords = await getLatLng(place.address, geocoder);
+          if (coords) {
+            return {
+              ...place,
+              location: coords,
+            };
+          } else {
+            console.warn(`Geocoding failed for address: ${place.address}`);
+            return null;
+          }
+        })
+      );
+    }
+    else if(isClick==="western"){
+      geocodedPlaces = await Promise.all(
+        kind_usa.map(async (place) => {
+          const coords = await getLatLng(place.address, geocoder);
+          if (coords) {
+            return {
+              ...place,
+              location: coords,
+            };
+          } else {
+            console.warn(`Geocoding failed for address: ${place.address}`);
+            return null;
+          }
+        })
+      );
+    }
+    else if(isClick==="cafe"){
+      geocodedPlaces = await Promise.all(
+        kind_cafe.map(async (place) => {
+          const coords = await getLatLng(place.address, geocoder);
+          if (coords) {
+            return {
+              ...place,
+              location: coords,
+            };
+          } else {
+            console.warn(`Geocoding failed for address: ${place.address}`);
+            return null;
+          }
+        })
+      );
+    }
 
     const validPlaces = geocodedPlaces.filter(place => place !== null);
     setPlacesData(validPlaces);
     setFilteredPlacesData(validPlaces);
   };
 
-  const handleFilterChange = (category) => {
+  const FilterChange = (category) => {
+    setIsClick(category);
+  }
+
+  const handleFilterChange = () => {
     let keyword = '';
-    switch (category) {
-      case 'tourist':
-        setIsTourist(true); // tourist 카테고리 여부 설정
-        loadKindPlacesData(geocoder.current); // JSON 파일을 로드하여 지도에 표시
-        return; // 이후의 코드 실행을 막기 위해 return
-      case '한식':
+    switch (isClick) {
+      case 'korean':
         keyword = 'korean';
         break;
-      case '중식':
+      case 'chinese':
         keyword = 'chinese';
         break;
-      case '양식':
+      case 'western':
         keyword = 'western';
         break;
       case 'cafe':
@@ -180,8 +238,10 @@ function Plan() {
       default:
         keyword = 'korean';
     }
-    setIsTourist(false); // tourist 카테고리가 아님을 설정
-    if (mapRef.current) {
+    if(isKind){
+      loadKindPlacesData(geocoder.current); // JSON 파일을 로드하여 지도에 표시
+    }
+    else if (mapRef.current) {
       searchNearbyPlaces(mapRef.current.getCenter(), keyword);
     }
   };
@@ -200,7 +260,7 @@ function Plan() {
 
   return (
     <div className="plan-container flex-initial">
-      <Sidebar currentAddress={currentAddress} placesData={placesData} onFilterChange={handleFilterChange} />
+      <Sidebar currentAddress={currentAddress} placesData={placesData} onFilterChange={FilterChange} name={name} isKind={setIsKind} />
       <div className="map">
         <LoadScript
           googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
@@ -220,7 +280,7 @@ function Plan() {
                   key={index}
                   position={place.location}
                   onClick={() => setSelectedPlace(place)}
-                  icon={isTourist ? pinkMarkerIcon : null} // tourist 카테고리일 때 핑크색 아이콘 사용
+                  icon={isKind ? pinkMarkerIcon : null} // tourist 카테고리일 때 핑크색 아이콘 사용
                 />
               ))}
 

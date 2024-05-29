@@ -1,125 +1,78 @@
 import { useState, useEffect } from 'react';
-import placeData from "./서울식당.json";
 
-function SelectPlace({ placesData, pick, onDragStart, onFilterChange }) {
+function SelectPlace({ placesData, pick, onDragStart, onFilterChange, isKind }) {
   const [filteredData, setFilteredData] = useState([]);
-  const [activeCategory, setActiveCategory] = useState('한식'); // 초기 카테고리 설정
+  const [activeCategory, setActiveCategory] = useState('korean');
+  const [Kind, setKind] = useState(false);
 
   useEffect(() => {
     const filterResults = () => {
-      const touristResults = placeData.filter(item =>
+      const filteredResults = placesData.filter(item =>
         item.name.toLowerCase().includes(pick.toLowerCase())
       );
-      const restaurantResults = placesData.filter(item =>
-        item.name.toLowerCase().includes(pick.toLowerCase())
-      );
-      const koreanResults = placesData.filter(item =>
-        item.name.toLowerCase().includes(pick.toLowerCase())
-      );
-      const chineseResults = placesData.filter(item =>
-        item.name.toLowerCase().includes(pick.toLowerCase())
-      );
-      const westernResults = placesData.filter(item =>
-        item.name.toLowerCase().includes(pick.toLowerCase())
-      );
-      const cafeResults = placesData.filter(item =>
-        item.name.toLowerCase().includes(pick.toLowerCase())
-      );
-
-      switch (activeCategory) {
-        case 'tourist':
-          setFilteredData(touristResults);
-          break;
-        case 'restaurant':
-          setFilteredData(restaurantResults);
-          break;
-        case '한식':
-          setFilteredData(koreanResults);
-          break;
-        case '중식':
-          setFilteredData(chineseResults);
-          break;
-        case '양식':
-          setFilteredData(westernResults);
-          break;
-        case 'cafe':
-          setFilteredData(cafeResults);
-          break;
-        default:
-          setFilteredData([]);
-      }
+      setFilteredData(filteredResults);
     };
 
     filterResults();
   }, [pick, placesData, activeCategory]);
+
+  useEffect(() => {}, [activeCategory]);
+
+  useEffect(() => {
+    isKind(Kind);
+  }, [Kind, isKind]);
 
   const handleCategoryChange = (category) => {
     setActiveCategory(category);
     onFilterChange(category);
   };
 
+  const toggleKind = () => {
+    const newKindState = !Kind;
+    setKind(newKindState);
+    handleCategoryChange(activeCategory);
+  };
+
   return (
-    <div className="w-full p-4 space-y-4 overflow-y-auto" style={{ minHeight: '500px', maxHeight: '500px' }}>
-      <div className="flex space-x-1 mb-4 sticky top-0">
+    <div className="w-full p-4 pt-0 space-y-4 overflow-y-auto" style={{ minHeight: '500px', maxHeight: '500px' }}>
+      <div 
+          onClick={toggleKind}
+          className="flex items-center justify-between mb-4 sticky cursor-pointer top-0 bg-green-100 z-10 p-4 rounded-lg shadow-md">        <span className="text-gray-700 font-semibold">착한 식당</span>
         <button
-          onClick={() => handleCategoryChange('tourist')}
-          className={`flex-1 p-2 text-center rounded-lg transition text-nowrap ${
-            activeCategory === 'tourist' ? "bg-blue-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-          }`}
+          className={`relative inline-flex items-center h-6 rounded-full w-11 transition ${Kind ? 'bg-green-500' : 'bg-gray-300'}`}
         >
-          착한<br />식당
+          <span
+            className={`inline-block w-4 h-4 transform bg-white rounded-full transition-transform ${Kind ? 'translate-x-6' : 'translate-x-1'}`}
+          />
         </button>
-        <button
-          onClick={() => handleCategoryChange('restaurant')}
-          className={`flex-1 p-2 text-center rounded-lg transition text-nowrap ${
-            activeCategory === 'restaurant' ? "bg-blue-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-          }`}
-        >
-          식당
-        </button>
-        <button
-          onClick={() => handleCategoryChange('한식')}
-          className={`flex-1 p-2 text-center rounded-lg transition text-nowrap ${
-            activeCategory === '한식' ? "bg-blue-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-          }`}
-        >
-          한식
-        </button>
-        <button
-          onClick={() => handleCategoryChange('중식')}
-          className={`flex-1 p-2 text-center rounded-lg transition text-nowrap ${
-            activeCategory === '중식' ? "bg-blue-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-          }`}
-        >
-          중식
-        </button>
-        <button
-          onClick={() => handleCategoryChange('양식')}
-          className={`flex-1 p-2 text-center rounded-lg transition text-nowrap ${
-            activeCategory === '양식' ? "bg-blue-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-          }`}
-        >
-          양식
-        </button>
-        <button
-          onClick={() => handleCategoryChange('cafe')}
-          className={`flex-1 p-2 text-center rounded-lg transition text-nowrap ${
-            activeCategory === 'cafe' ? "bg-blue-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-          }`}
-        >
-          카페
-        </button>
+      </div>
+      <div className="flex space-x-2 mb-4 sticky top-12 bg-white z-10 p-2">
+        {['korean', 'chinese', 'western', 'cafe'].map(category => (
+          <button
+            key={category}
+            onClick={() => handleCategoryChange(category)}
+            className={`flex-1 py-2 px-4 text-center rounded-lg transition text-nowrap font-semibold ${activeCategory === category ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}`}
+          >
+            {category === 'korean' && '한식'}
+            {category === 'chinese' && '중식'}
+            {category === 'western' && '양식'}
+            {category === 'cafe' && '카페'}
+          </button>
+        ))}
       </div>
       {filteredData.map((location) => (
         <div
-          className="p-4 bg-white rounded-lg shadow cursor-pointer hover:bg-gray-100 transition w-4/4"
+          className="p-4 bg-white rounded-lg shadow-md cursor-pointer hover:bg-gray-50 transition w-full"
           draggable="true"
           key={location.id}
-          onDragStart={() => onDragStart(location)}
+          onDragStart={(e) => {
+            onDragStart(location);
+            e.dataTransfer.setData("text/plain", JSON.stringify(location));
+          }}
         >
           <div className="flex flex-col justify-center h-full">
-            <div className="text-lg font-semibold">{location.name}</div>
-            <div className="text-sm text-gray-500 overflow-hidden text-ellipsis">
+            <p className="text-lg font-semibold text-gray-800">{location.name}</p>
+            <div className="text-sm text-gray-600 overflow-hidden text-ellipsis">
               {location.address}
             </div>
             <div className="hidden time mt-2 items-center space-x-2">
