@@ -23,7 +23,7 @@ function Section2() {
       image: `${process.env.PUBLIC_URL}/card1.jpg`,
       title: "착한 가격 업소",
       description:
-        "착한 가격 업소에 대해 알고 계신가요? 지역 물가 대비 저렴하고 친절한 서비스로 국가에서 인정해준 업소이며, 전국에 7200여 개 밖에 존재하지 않습니다.",
+        "착한 가격 업소에 대해 알고 계신가요? 지역 물가 대비 저렴하고 친절한 서비스로 각 지자체에서 인정한 업소이며, 전국에 7200여 개 밖에 존재하지 않습니다.",
     },
     {
       image: `${process.env.PUBLIC_URL}/card2.jpg`,

@@ -123,9 +123,10 @@ function SlidebarMyList({ myList, setMyList }) {
     { name: 'Mint', value: '#9de0ad' },
     { name: 'Pale Blue', value: '#a8e6cf' },
     { name: 'Lavender', value: '#cbaacb' },
-    { name: 'Lemon', value: '#ffeebb' },
+    { name: 'Dusky Peach', value: '#e29a86' },
     { name: 'Sky Blue', value: '#a2d5f2' },
   ];
+  
   
 
   return (

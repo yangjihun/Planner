@@ -7,9 +7,28 @@ function SelectPlace({ placesData, pick, onDragStart, onFilterChange, isKind }) 
 
   useEffect(() => {
     const filterResults = () => {
-      const filteredResults = placesData.filter(item =>
+      let tops;
+      if(activeCategory==="western"){
+        tops = [{name:"이민성 치킨",address:"중구 을지로 12길 38",location: {lat: 37.5610364, lng: 126.9823871},type: "korean"},
+        {name:"민성파스타",address:"중구 오장동 101-24",location: {lat: 37.5610364, lng: 126.9823871},type: "korean"}];
+      }
+      else if(activeCategory==="korean"){
+        tops = [{name:"이민성 김밥",address:"중구 을지로 12길 38",location: {lat: 37.5610364, lng: 126.9823871},type: "korean"},
+        {name:"이민성 쌈밥",address:"중구 오장동 101-24",location: {lat: 37.5610364, lng: 126.9823871},type: "korean"}];
+      }
+      else if(activeCategory==="chinese"){
+        tops = [{name:"짬뽕은 이민성",address:"중구 을지로 12길 38",location: {lat: 37.5610364, lng: 126.9823871},type: "korean"},
+        {name:"민성각",address:"중구 오장동 101-24",location: {lat: 37.5610364, lng: 126.9823871},type: "korean"}];
+      }
+      else if(activeCategory==="cafe"){
+        tops = [{name:"MGC 민성커피",address:"중구 을지로 12길 38",location: {lat: 37.5610364, lng: 126.9823871},type: "korean"},
+        {name:"민성벅스",address:"중구 오장동 101-24",location: {lat: 37.5610364, lng: 126.9823871},type: "korean"}];
+      }
+      
+      const filteredResults = tops.concat(placesData.filter(item =>
         item.name.toLowerCase().includes(pick.toLowerCase())
-      );
+      ));
+      
       setFilteredData(filteredResults);
     };
 
@@ -37,7 +56,8 @@ function SelectPlace({ placesData, pick, onDragStart, onFilterChange, isKind }) 
     <div className="w-full p-4 pt-0 space-y-4 overflow-y-auto" style={{ minHeight: '500px', maxHeight: '500px' }}>
       <div 
           onClick={toggleKind}
-          className="flex items-center justify-between mb-4 sticky cursor-pointer top-0 bg-green-100 z-10 p-4 rounded-lg shadow-md">        <span className="text-gray-700 font-semibold">착한 식당</span>
+          className="flex items-center justify-between mb-4 sticky cursor-pointer top-0 bg-green-100 z-10 p-4 rounded-lg shadow-md">        
+        <span className="text-gray-700 font-semibold">착한 식당</span>
         <button
           className={`relative inline-flex items-center h-6 rounded-full w-11 transition ${Kind ? 'bg-green-500' : 'bg-gray-300'}`}
         >
@@ -70,8 +90,10 @@ function SelectPlace({ placesData, pick, onDragStart, onFilterChange, isKind }) 
             e.dataTransfer.setData("text/plain", JSON.stringify(location));
           }}
         >
-          <div className="flex flex-col justify-center h-full">
+          <div className=" relative flex flex-col justify-center h-full">
             <p className="text-lg font-semibold text-gray-800">{location.name}</p>
+            {filteredData[0].address===location.address ? <p className='absolute right-0 top-0 text-xs text-gray-500 border border-1 border-gray-300 pl-1 pr-1 rounded-xl'>광고</p> : ''}
+            {filteredData[1].address===location.address ? <p className='absolute right-0 top-0 text-xs text-gray-500 border border-1 border-gray-300 pl-1 pr-1 rounded-xl'>광고</p> : ''}
             <div className="text-sm text-gray-600 overflow-hidden text-ellipsis">
               {location.address}
             </div>
