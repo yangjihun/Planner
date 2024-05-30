@@ -21,9 +21,9 @@ function Section2() {
   const cards = [
     {
       image: `${process.env.PUBLIC_URL}/card1.jpg`,
-      title: "바에서의 에스프레소",
+      title: "착한 가격 업소",
       description:
-        "이탈리아의 작은 카페에서 에스프레소를 주문할 때, 바에서 서서 마시면 앉아서 마실 때보다 더 저렴하다는 것을 기억하세요. 테이블 서비스에 추가 요금이 부과될 수 있습니다.",
+        "착한 가격 업소에 대해 알고 계신가요? 지역 물가 대비 저렴하고 친절한 서비스로 국가에서 인정해준 업소이며, 전국에 7200여 개 밖에 존재하지 않습니다.",
     },
     {
       image: `${process.env.PUBLIC_URL}/card2.jpg`,

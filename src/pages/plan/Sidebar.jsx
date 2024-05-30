@@ -4,7 +4,7 @@ import SelectTime from './SelectTime';
 import Slidebar from './Slidebar';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
-function Sidebar({ currentAddress, placesData, onFilterChange }) {
+function Sidebar({ currentAddress, placesData, onFilterChange, name, isKind }) {
   const [isOpen, setIsOpen] = useState(true);
   const [isTime, setIsTime] = useState(true);
   const [isPlace, setIsPlace] = useState(false);
@@ -100,7 +100,7 @@ function Sidebar({ currentAddress, placesData, onFilterChange }) {
         <div className="flex p-4 bg-white shadow">
           <button
             onClick={selectTime}
-            className={`flex-1 p-2 text-center rounded-lg transition ${
+            className={`flex-1 p-2 text-center text-nowrap rounded-lg transition ${
               isTime ? "bg-blue-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
@@ -108,7 +108,7 @@ function Sidebar({ currentAddress, placesData, onFilterChange }) {
           </button>
           <button
             onClick={selectPlace}
-            className={`flex-1 p-2 ml-2 text-center rounded-lg transition ${
+            className={`flex-1 p-2 ml-2 text-center text-nowrap rounded-lg transition ${
               isPlace ? "bg-blue-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
@@ -136,6 +136,7 @@ function Sidebar({ currentAddress, placesData, onFilterChange }) {
               onDragStart={handleDragStart}
               placesData={placesData}
               onFilterChange={onFilterChange}
+              isKind={isKind}
             />
           )}
         </div>
@@ -146,6 +147,7 @@ function Sidebar({ currentAddress, placesData, onFilterChange }) {
           onDrop={handleDropToSlidebar}
           onDragOver={(e) => e.preventDefault()}
           style={{ height: '100%' }}
+          name={name}
         />
       </div>
     </div>

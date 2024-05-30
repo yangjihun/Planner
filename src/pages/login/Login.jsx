@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import './Login.css'; // CSS 파일을 불러옵니다.
 
-const Login = () => {
+const Login = ({setName}) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -11,6 +11,7 @@ const Login = () => {
     e.preventDefault();
     if (username === "admin1234" && password === "1234") {
       setIsLoggedIn(true);
+      setName("이민성");
     } else {
       alert("아이디나 비밀번호가 잘못되었습니다.");
     }
@@ -18,6 +19,7 @@ const Login = () => {
 
   const handleLogout = () => {
     setIsLoggedIn(false);
+    setName("");
   };
 
   return (
@@ -36,7 +38,7 @@ const Login = () => {
             <h2 className="text-2xl font-bold text-gray-800">안녕하세요, 이민성님!</h2>
             <button
               onClick={handleLogout}
-              className="px-4 py-2 mt-4 text-white bg-blue-500 rounded hover:bg-blue-600 transition duration-300"
+              className="px-4 py-2 mt-10 text-white bg-blue-500 rounded hover:bg-blue-600 transition duration-300"
             >
               Logout
             </button>
