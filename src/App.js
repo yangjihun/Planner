@@ -14,10 +14,10 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <Header name={name} />
+        <Header name={name} setName={setName} />
         <main className="main-content">
           <Routes>
-            <Route path="/" element={<Sections name={name} />} />
+            <Route path="/" element={<Sections name={name} setName={setName} />} />
             <Route path="/auction" element={<Auction setName={setName} />} />
             <Route path="/plan" element={<Plan name={name} />} />
             <Route path="/login" element={<Login setName={setName} />} />
