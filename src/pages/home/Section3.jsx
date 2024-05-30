@@ -88,7 +88,6 @@ const Section3 = () => {
                   alt="여행"
                   className="w-auto h-128 rounded-lg shadow-lg"
                 />
-                <div className="overlay">여행 계획 짜러가기</div>
               </div>
             </button>
           </div>

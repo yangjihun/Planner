@@ -11,7 +11,7 @@ const Header = ({ name }) => {
         <nav className="md:ml-auto flex flex-wrap items-center text-base justify-center w-full md:w-auto">
           <Link to="/" className="mr-10 hover:text-headerTextColor font-semibold hover:scale-105 transition duration-150">Home</Link>
           <Link to="/auction" className="mr-10 hover:text-headerTextColor font-semibold hover:scale-105 transition duration-150">Auction</Link>
-          <Link to="/login" className="mr-10 hover:text-headerTextColor font-semibold hover:scale-105 transition duration-150">Login</Link>
+          <Link to="/login" className="mr-10 hover:text-headerTextColor font-semibold hover:scale-105 transition duration-150">{name==='' ? 'Login' : 'Logout'}</Link>
         </nav>
       </div>
     </header>

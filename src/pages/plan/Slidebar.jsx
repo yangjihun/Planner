@@ -7,6 +7,23 @@ function Slidebar({ selectedDates, onDrop, name }) {
   const [isMyList, setMyList] = useState(false);
   const [myList, setMyListState] = useState([{ title: 'My List', items: [] }]);
 
+  /*  데이터 json형식으로 변환
+  const sendData = () => {
+    console.log(selectedDates);
+  };
+  */
+
+  const handle = () => {
+    if (navigator.share) {
+        navigator.share({
+            title: 'favicon',
+            url: './plan',
+        });
+    }else{
+        alert("공유하기가 지원되지 않는 환경 입니다.")
+    }
+  }
+
   const Planner = () => {
     setMyList(false);
     setPlanner(true);
@@ -32,7 +49,7 @@ function Slidebar({ selectedDates, onDrop, name }) {
         <SlidebarMyList myList={myList} setMyList={setMyListState} />
       }
       <div className="flex justify-center items-center h-16">
-        <button className="w-1/2 h-full bg-blue-500 text-white rounded-lg flex items-center justify-center shadow hover:bg-blue-600 transition" onClick={() => { console.log(selectedDates) }}>
+        <button className="w-1/2 h-full bg-blue-500 text-white rounded-lg flex items-center justify-center shadow hover:bg-blue-600 transition" onClick={() => {handle()}}>
           공유하기
         </button>
       </div>

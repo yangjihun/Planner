@@ -118,14 +118,15 @@ function SlidebarMyList({ myList, setMyList }) {
 
   const colors = [
     { name: 'Soft Pink', value: '#ff9aa2' },
-    { name: 'Peach', value: '#ffb7b2' },
+    { name: 'Coral', value: '#ff7f50' },
     { name: 'Light Green', value: '#b5ead7' },
     { name: 'Mint', value: '#9de0ad' },
     { name: 'Pale Blue', value: '#a8e6cf' },
     { name: 'Lavender', value: '#cbaacb' },
     { name: 'Lemon', value: '#ffeebb' },
     { name: 'Sky Blue', value: '#a2d5f2' },
-  ];
+];
+
   
 
   return (
