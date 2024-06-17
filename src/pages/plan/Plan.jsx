@@ -15,7 +15,7 @@ const containerStyle = {
 function Plan({name}) {
   const location = useLocation();
   const [center, setCenter] = useState(null);
-  const [places, setPlaces] = useState([]);
+  const [selectedDates, setSelectedDates] = useState([]);
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [placesData, setPlacesData] = useState([]);
   const [filteredPlacesData, setFilteredPlacesData] = useState([]);
@@ -24,6 +24,7 @@ function Plan({name}) {
   const geocoder = useRef(null);
   const [isClick, setIsClick] = useState("korean");
   const [isKind, setIsKind] = useState(false);
+  const [draggedElement, setDraggedElement] = useState(null); // 추가된 부분
 
   useEffect(() => {
     if (location.state && location.state.center && location.state.center.coords) {
@@ -64,7 +65,6 @@ function Plan({name}) {
     };
     service.nearbySearch(request, (results, status) => {
       if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-        setPlaces(results);
         const placesInfo = results.map(place => ({
           name: place.name,
           address: place.vicinity,
@@ -250,6 +250,23 @@ function Plan({name}) {
     console.error("Error loading Google Maps API script:", error);
   };
 
+  const handleDragStart = (element) => {
+    setDraggedElement(element);
+  };
+
+  const handleDropToSlidebar = (index) => {
+    if (Array.isArray(index)) {
+      setSelectedDates(index);
+    } else if (draggedElement) {
+      setSelectedDates((prevDates) =>
+        prevDates.map((date, i) =>
+          i === index ? { ...date, items: [...(date.items || []), draggedElement] } : date
+        )
+      );
+      setDraggedElement(null);
+    }
+  };
+
   if (!center) {
     return <div>지도를 표시할 위치 정보가 없습니다.</div>;
   }
@@ -260,7 +277,17 @@ function Plan({name}) {
 
   return (
     <div className="plan-container flex-initial">
-      <Sidebar currentAddress={currentAddress} placesData={placesData} onFilterChange={FilterChange} name={name} isKind={setIsKind} />
+      <Sidebar 
+        currentAddress={currentAddress} 
+        setSelectedDates={setSelectedDates} 
+        placesData={placesData} 
+        onFilterChange={FilterChange} 
+        name={name} 
+        isKind={setIsKind} 
+        selectedDates={selectedDates} 
+        handleDropToSlidebar={handleDropToSlidebar}
+        handleDragStart={handleDragStart} // 추가된 부분
+      />
       <div className="map">
         <LoadScript
           googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}

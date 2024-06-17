@@ -4,13 +4,11 @@ import SelectTime from './SelectTime';
 import Slidebar from './Slidebar';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
-function Sidebar({ currentAddress, placesData, onFilterChange, name, isKind }) {
+function Sidebar({ currentAddress, setSelectedDates, placesData, onFilterChange, name, isKind, selectedDates, handleDropToSlidebar, handleDragStart }) {
   const [isOpen, setIsOpen] = useState(true);
   const [isTime, setIsTime] = useState(true);
   const [isPlace, setIsPlace] = useState(false);
-  const [selectedDates, setSelectedDates] = useState([]);
   const [loc, setLoc] = useState('');
-  const [draggedElement, setDraggedElement] = useState(null);
   const [startDate, setStartDate] = useState(new Date());
   const [duration, setDuration] = useState('');
   const [budget, setBudget] = useState(0);
@@ -59,23 +57,6 @@ function Sidebar({ currentAddress, placesData, onFilterChange, name, isKind }) {
     setLoc(event.target.value);
     setIsTime(false);
     setIsPlace(true);
-  };
-
-  const handleDragStart = (element) => {
-    setDraggedElement(element);
-  };
-
-  const handleDropToSlidebar = (index) => {
-    if (Array.isArray(index)) {
-      setSelectedDates(index);
-    } else if (draggedElement) {
-      setSelectedDates((prevDates) =>
-        prevDates.map((date, i) =>
-          i === index ? { ...date, items: [...(date.items || []), draggedElement] } : date
-        )
-      );
-      setDraggedElement(null);
-    }
   };
 
   return (
