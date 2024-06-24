@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-function SelectPlace({ placesData, pick, onDragStart, onFilterChange, isKind }) {
+function SelectPlace({ placesData, pick, onDragStart, onFilterChange, isKind, onPlaceClick }) {
   const [filteredData, setFilteredData] = useState([]);
   const [activeCategory, setActiveCategory] = useState('korean');
   const [Kind, setKind] = useState(false);
@@ -85,6 +85,7 @@ function SelectPlace({ placesData, pick, onDragStart, onFilterChange, isKind }) 
           className="p-4 bg-white rounded-lg shadow-md cursor-pointer hover:bg-gray-50 transition w-full"
           draggable="true"
           key={location.id}
+          onClick={() => onPlaceClick(location)} // 추가된 부분
           onDragStart={(e) => {
             onDragStart(location);
             e.dataTransfer.setData("text/plain", JSON.stringify(location));

@@ -4,7 +4,7 @@ import SelectTime from './SelectTime';
 import Slidebar from './Slidebar';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
-function Sidebar({ currentAddress, setSelectedDates, placesData, onFilterChange, name, isKind, selectedDates, handleDropToSlidebar, handleDragStart }) {
+function Sidebar({ currentAddress, setSelectedDates, placesData, onFilterChange, name, isKind, selectedDates, handleDropToSlidebar, handleDragStart, onPlaceClick }) {
   const [isOpen, setIsOpen] = useState(true);
   const [isTime, setIsTime] = useState(true);
   const [isPlace, setIsPlace] = useState(false);
@@ -60,7 +60,7 @@ function Sidebar({ currentAddress, setSelectedDates, placesData, onFilterChange,
   };
 
   return (
-    <div className={`flex ${isOpen ? "w-full" : "w-2/6"}`} style={{ height: '100%' }}>
+    <div className={`flex ${isOpen ? "w-full" : "w-2/6"}`} style={{ height: '100vh' }}>
       <div className={`flex flex-col ${isOpen ? "w-2/4" : "w-full"} h-full border-r-2 border-gray-300 bg-gray-50 shadow-lg`}>
         <div className="flex items-center justify-between px-4 py-2 bg-white border-b-2 border-gray-300">
           <span className="font-bold text-lg text-gray-700">{}</span>
@@ -118,6 +118,7 @@ function Sidebar({ currentAddress, setSelectedDates, placesData, onFilterChange,
               placesData={placesData}
               onFilterChange={onFilterChange}
               isKind={isKind}
+              onPlaceClick={onPlaceClick} // 추가된 부분
             />
           )}
         </div>

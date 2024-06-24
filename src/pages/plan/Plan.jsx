@@ -12,7 +12,7 @@ const containerStyle = {
   height: "100vh",
 };
 
-function Plan({name}) {
+function Plan({ name }) {
   const location = useLocation();
   const [center, setCenter] = useState(null);
   const [selectedDates, setSelectedDates] = useState([]);
@@ -105,19 +105,21 @@ function Plan({name}) {
   }, [center, isKind]);
 
   const geocodeLatLng = (coords) => {
-    geocoder.current.geocode({ location: coords }, (results, status) => {
-      if (status === 'OK') {
-        if (results[0]) {
-          const addressComponents = results[0].address_components;
-          const formattedAddress = formatAddress(addressComponents);
-          setCurrentAddress(formattedAddress);
+    if (geocoder.current) {
+      geocoder.current.geocode({ location: coords }, (results, status) => {
+        if (status === window.google.maps.GeocoderStatus.OK) {
+          if (results[0]) {
+            const addressComponents = results[0].address_components;
+            const formattedAddress = formatAddress(addressComponents);
+            setCurrentAddress(formattedAddress);
+          } else {
+            setCurrentAddress('No address found');
+          }
         } else {
-          setCurrentAddress('No address found');
+          setCurrentAddress('Geocoder failed due to: ' + status);
         }
-      } else {
-        setCurrentAddress('Geocoder failed due to: ' + status);
-      }
-    });
+      });
+    }
   };
 
   const formatAddress = (addressComponents) => {
@@ -146,7 +148,7 @@ function Plan({name}) {
 
   const loadKindPlacesData = async (geocoder) => {
     let geocodedPlaces;
-    if(isClick==="korean"){
+    if (isClick === "korean") {
       geocodedPlaces = await Promise.all(
         kind_korea.map(async (place) => {
           const coords = await getLatLng(place.address, geocoder);
@@ -161,8 +163,7 @@ function Plan({name}) {
           }
         })
       );
-    }
-    else if(isClick==="chinese"){
+    } else if (isClick === "chinese") {
       geocodedPlaces = await Promise.all(
         kind_china.map(async (place) => {
           const coords = await getLatLng(place.address, geocoder);
@@ -177,8 +178,7 @@ function Plan({name}) {
           }
         })
       );
-    }
-    else if(isClick==="western"){
+    } else if (isClick === "western") {
       geocodedPlaces = await Promise.all(
         kind_usa.map(async (place) => {
           const coords = await getLatLng(place.address, geocoder);
@@ -193,8 +193,7 @@ function Plan({name}) {
           }
         })
       );
-    }
-    else if(isClick==="cafe"){
+    } else if (isClick === "cafe") {
       geocodedPlaces = await Promise.all(
         kind_cafe.map(async (place) => {
           const coords = await getLatLng(place.address, geocoder);
@@ -238,7 +237,7 @@ function Plan({name}) {
       default:
         keyword = 'korean';
     }
-    if(isKind){
+    if (isKind) {
       loadKindPlacesData(geocoder.current); // JSON 파일을 로드하여 지도에 표시
     }
     else if (mapRef.current) {
@@ -267,6 +266,13 @@ function Plan({name}) {
     }
   };
 
+  const handlePlaceClick = (place) => {
+    if (mapRef.current) {
+      mapRef.current.panTo(place.location);
+    }
+    setSelectedPlace(place);
+  };
+
   if (!center) {
     return <div>지도를 표시할 위치 정보가 없습니다.</div>;
   }
@@ -275,18 +281,24 @@ function Plan({name}) {
     url: "http://maps.google.com/mapfiles/ms/icons/pink-dot.png",
   };
 
+  const createNaverLink = (placeName) => {
+    const query = encodeURIComponent(placeName);
+    return `https://search.naver.com/search.naver?query=${query}`;
+  };
+
   return (
     <div className="plan-container flex-initial">
-      <Sidebar 
-        currentAddress={currentAddress} 
-        setSelectedDates={setSelectedDates} 
-        placesData={placesData} 
-        onFilterChange={FilterChange} 
-        name={name} 
-        isKind={setIsKind} 
-        selectedDates={selectedDates} 
+      <Sidebar
+        currentAddress={currentAddress}
+        setSelectedDates={setSelectedDates}
+        placesData={placesData}
+        onFilterChange={FilterChange}
+        name={name}
+        isKind={setIsKind}
+        selectedDates={selectedDates}
         handleDropToSlidebar={handleDropToSlidebar}
-        handleDragStart={handleDragStart} // 추가된 부분
+        handleDragStart={handleDragStart}
+        onPlaceClick={handlePlaceClick} // 추가된 부분
       />
       <div className="map">
         <LoadScript
@@ -316,16 +328,31 @@ function Plan({name}) {
                   position={selectedPlace.location}
                   onCloseClick={() => setSelectedPlace(null)}
                 >
-                  <div>
-                    <h2>{selectedPlace.name}</h2>
-                    <p>{selectedPlace.address}</p>
-                    {selectedPlace.주요품목 && selectedPlace.가격 && (
-                      <p>{selectedPlace.주요품목} - {selectedPlace.가격}원</p>
-                    )}
-                    {selectedPlace.연락처 && <p>연락처: {selectedPlace.연락처}</p>}
+                  <div className="p-4 max-w-xs">
+                    <div className="border-b pb-2 mb-2">
+                      <h2 className="text-lg font-bold text-gray-800">{selectedPlace.name}</h2>
+                    </div>
+                    <div className="text-gray-600">
+                      <p>{selectedPlace.address}</p>
+                      {selectedPlace.주요품목 && selectedPlace.가격 && (
+                        <p>{selectedPlace.주요품목} - {selectedPlace.가격}원</p>
+                      )}
+                      {selectedPlace.연락처 && <p>연락처: {selectedPlace.연락처}</p>}
+                      <p>
+                        <a
+                          href={createNaverLink("제주 "+selectedPlace.name)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-500 hover:underline"
+                        >
+                          네이버에서 검색
+                        </a>
+                      </p>
+                    </div>
                   </div>
                 </InfoWindow>
               )}
+
             </GoogleMap>
           </div>
         </LoadScript>
