@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useLocation } from "react-router-dom";
-import { GoogleMap, LoadScript, Marker, InfoWindow } from "@react-google-maps/api";
+import { GoogleMap, LoadScript, Marker, InfoWindow, Polyline } from "@react-google-maps/api";
 import Sidebar from "./Sidebar";
 import "./Plan.css";
 import kind_china from "./서울_중식.json"; // 서울식당.json 파일을 가져옴
 import kind_korea from "./서울_한식.json";
 import kind_usa from "./서울_양식.json";
 import kind_cafe from "./서울_카페.json";
+
 const containerStyle = {
   width: "100%",
   height: "100vh",
@@ -25,6 +26,7 @@ function Plan({ name }) {
   const [isClick, setIsClick] = useState("korean");
   const [isKind, setIsKind] = useState(false);
   const [draggedElement, setDraggedElement] = useState(null); // 추가된 부분
+  const [animatedPaths, setAnimatedPaths] = useState([]); // 애니메이션 효과를 위한 경로 상태
 
   useEffect(() => {
     if (location.state && location.state.center && location.state.center.coords) {
@@ -273,6 +275,26 @@ function Plan({ name }) {
     setSelectedPlace(place);
   };
 
+  useEffect(() => {
+    selectedDates.forEach((date, dateIndex) => {
+      if (date.items && date.items.length > 1) {
+        let currentPath = [];
+        const interval = setInterval(() => {
+          if (currentPath.length < date.items.length) {
+            currentPath.push(date.items[currentPath.length].location);
+            setAnimatedPaths((prevPaths) => {
+              const newPaths = [...prevPaths];
+              newPaths[dateIndex] = currentPath;
+              return newPaths;
+            });
+          } else {
+            clearInterval(interval);
+          }
+        }, 500);
+      }
+    });
+  }, [selectedDates]);
+
   if (!center) {
     return <div>지도를 표시할 위치 정보가 없습니다.</div>;
   }
@@ -340,7 +362,7 @@ function Plan({ name }) {
                       {selectedPlace.연락처 && <p>연락처: {selectedPlace.연락처}</p>}
                       <p>
                         <a
-                          href={createNaverLink("제주 "+selectedPlace.name)}
+                          href={createNaverLink("제주 " + selectedPlace.name)}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="text-blue-500 hover:underline"
@@ -353,6 +375,37 @@ function Plan({ name }) {
                 </InfoWindow>
               )}
 
+              {selectedDates && selectedDates.map((date, dateIndex) => {
+                const path = date.items ? date.items.map((item) => item.location) : [];
+                return (
+                  <React.Fragment key={dateIndex}>
+                    {date.items && date.items.map((item, itemIndex) => (
+                      <Marker
+                        key={`${dateIndex}-${itemIndex}`}
+                        position={item.location}
+                        onClick={() => setSelectedPlace(item)}
+                        label={{
+                          text: `${dateIndex+1}`,
+                          fontSize: "16px",
+                          fontWeight: "bold",
+                          color: "white",
+                          className: "custom-marker-label", // 이 클래스는 커스텀 CSS를 위해 추가
+                        }}
+                      />
+                    ))}
+                    {animatedPaths[dateIndex] && animatedPaths[dateIndex].length > 1 && (
+                      <Polyline
+                        path={animatedPaths[dateIndex]}
+                        options={{
+                          strokeColor: "#FF0000",
+                          strokeOpacity: 0.8,
+                          strokeWeight: 2,
+                        }}
+                      />
+                    )}
+                  </React.Fragment>
+                );
+              })}
             </GoogleMap>
           </div>
         </LoadScript>
